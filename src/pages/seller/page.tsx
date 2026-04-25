@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
-import { ArrowRight, Newspaper, Video, LogIn, User, Bell, Settings, Shield } from "lucide-react";
+import { ArrowRight, Newspaper, Video, LogIn, User, Bell, Settings, Shield, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import {
@@ -134,6 +134,20 @@ function MyProfileContent() {
             تعديل الملف
           </Button>
         </div>
+
+        {/* Subscription CTA */}
+        {!currentUser?.subscriptionPackage && (
+          <button
+            onClick={() => navigate("/subscriptions")}
+            className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-primary/10 to-orange-400/10 border border-primary/20 hover:border-primary/40 transition-colors cursor-pointer"
+          >
+            <div className="flex items-center gap-2">
+              <Crown className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium">ترقّ إلى مميز</span>
+            </div>
+            <span className="text-xs text-primary font-medium">من 49 ر.س ←</span>
+          </button>
+        )}
 
         {/* Recent notifications */}
         {notifications && notifications.length > 0 && (
