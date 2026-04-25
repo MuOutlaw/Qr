@@ -55,15 +55,13 @@ export const deleteListing = mutation({
 export const reviewReport = mutation({
   args: {
     reportId: v.id("reports"),
-    status: v.union(v.literal("reviewed"), v.literal("dismissed")),
+    status: v.union(v.literal("resolved"), v.literal("dismissed")),
     reviewNote: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     await requireAdmin(ctx);
     await ctx.db.patch(args.reportId, {
       status: args.status,
-      reviewedAt: new Date().toISOString(),
-      reviewNote: args.reviewNote,
     });
   },
 });

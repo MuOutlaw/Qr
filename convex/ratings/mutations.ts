@@ -51,9 +51,11 @@ export const submitRating = mutation({
         score: args.score,
         comment: args.comment,
       });
-      const newTotal = ratedUser.rating * ratedUser.ratingCount - oldScore + args.score;
+      const prevRating = ratedUser.rating ?? 0;
+      const prevCount = ratedUser.ratingCount ?? 1;
+      const newTotal = prevRating * prevCount - oldScore + args.score;
       await ctx.db.patch(args.ratedUserId, {
-        rating: newTotal / ratedUser.ratingCount,
+        rating: newTotal / prevCount,
       });
     } else {
       await ctx.db.insert("ratings", {
@@ -64,8 +66,8 @@ export const submitRating = mutation({
         comment: args.comment,
         createdAt: new Date().toISOString(),
       });
-      const newCount = ratedUser.ratingCount + 1;
-      const newRating = (ratedUser.rating * ratedUser.ratingCount + args.score) / newCount;
+      const newCount = (ratedUser.ratingCount ?? 0) + 1;
+      const newRating = ((ratedUser.rating ?? 0) * (ratedUser.ratingCount ?? 0) + args.score) / newCount;
       await ctx.db.patch(args.ratedUserId, {
         rating: newRating,
         ratingCount: newCount,
@@ -107,9 +109,9 @@ export const deleteRating = mutation({
     if (!rating) throw new ConvexError({ code: "NOT_FOUND", message: "التقييم غير موجود" });
 
     const ratedUser = await ctx.db.get(args.ratedUserId);
-    if (ratedUser && ratedUser.ratingCount > 1) {
-      const newCount = ratedUser.ratingCount - 1;
-      const newRating = (ratedUser.rating * ratedUser.ratingCount - rating.score) / newCount;
+    if (ratedUser && (ratedUser.ratingCount ?? 0) > 1) {
+      const newCount = (ratedUser.ratingCount ?? 0) - 1;
+      const newRating = ((ratedUser.rating ?? 0) * (ratedUser.ratingCount ?? 0) - rating.score) / newCount;
       await ctx.db.patch(args.ratedUserId, { rating: newRating, ratingCount: newCount });
     } else if (ratedUser) {
       await ctx.db.patch(args.ratedUserId, { rating: 0, ratingCount: 0 });

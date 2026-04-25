@@ -3,6 +3,71 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Home, Gavel, Newspaper, User, Plus, X, Video, FileText } from "lucide-react";
 import { cn } from "@/lib/utils.ts";
 import { motion, AnimatePresence } from "motion/react";
+import { Authenticated } from "convex/react";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api.js";
+
+function UnreadBadge() {
+  const unread = useQuery(api.notifications.queries.getUnreadCount);
+  if (!unread || unread === 0) return null;
+  return (
+    <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 text-[10px] font-bold bg-red-500 text-white rounded-full flex items-center justify-center px-0.5">
+      {unread > 9 ? "9+" : unread}
+    </span>
+  );
+}
+
+function ProfileNavButton({ isActive, onClick }: { isActive: boolean; onClick: () => void }) {
+  return (
+    <div className="relative">
+      <button
+        onClick={onClick}
+        className={cn(
+          "flex flex-col items-center gap-0.5 px-3 py-2 cursor-pointer transition-colors relative",
+          isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
+        )}
+      >
+        <User className="h-5 w-5" />
+        <span className="text-[10px] font-medium">حسابي</span>
+        {isActive && (
+          <motion.div
+            layoutId="nav-indicator"
+            className="absolute -top-px left-1/2 -translate-x-1/2 h-0.5 w-8 bg-primary rounded-full"
+          />
+        )}
+      </button>
+      <Authenticated>
+        <UnreadBadge />
+      </Authenticated>
+    </div>
+  );
+}
+
+function ProfileNavButtonDesktop({ isActive, onClick }: { isActive: boolean; onClick: () => void }) {
+  return (
+    <div className="relative">
+      <button
+        onClick={onClick}
+        className={cn(
+          "flex flex-col items-center gap-1 p-2 rounded-xl cursor-pointer transition-all relative group",
+          isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
+        )}
+      >
+        <User className="h-5 w-5" />
+        <span className="text-[10px] font-medium">حسابي</span>
+        {isActive && (
+          <motion.div
+            layoutId="nav-indicator-desktop"
+            className="absolute -right-2 top-1/2 -translate-y-1/2 w-0.5 h-6 bg-primary rounded-full"
+          />
+        )}
+      </button>
+      <Authenticated>
+        <UnreadBadge />
+      </Authenticated>
+    </div>
+  );
+}
 
 const NAV_ITEMS = [
   { path: "/", icon: Home, label: "الرئيسية" },
@@ -124,7 +189,7 @@ export default function AppLayout() {
         </button>
 
         {/* Last two nav items */}
-        {NAV_ITEMS.slice(2, 4).map((item) => {
+        {NAV_ITEMS.slice(2, 3).map((item) => {
           const isActive = location.pathname === item.path;
           return (
             <button
@@ -148,6 +213,10 @@ export default function AppLayout() {
             </button>
           );
         })}
+        <ProfileNavButton
+          isActive={location.pathname === "/profile"}
+          onClick={() => handleNav("/profile")}
+        />
       </nav>
 
       {/* ── Create Menu Overlay (desktop) ──────────────────────────────── */}
@@ -249,7 +318,7 @@ export default function AppLayout() {
         </button>
 
         {/* Last two nav items */}
-        {NAV_ITEMS.slice(2, 4).map((item) => {
+        {NAV_ITEMS.slice(2, 3).map((item) => {
           const isActive = location.pathname === item.path;
           return (
             <button
@@ -273,6 +342,10 @@ export default function AppLayout() {
             </button>
           );
         })}
+        <ProfileNavButtonDesktop
+          isActive={location.pathname === "/profile"}
+          onClick={() => handleNav("/profile")}
+        />
       </nav>
     </div>
   );
