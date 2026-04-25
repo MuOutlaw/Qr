@@ -20,6 +20,8 @@ import ContactPage from "./pages/contact/page.tsx";
 import PayFeesPage from "./pages/pay-fees/page.tsx";
 import TermsPage from "./pages/terms/page.tsx";
 import StartLivePage from "./pages/live/start.tsx";
+import VerificationPage from "./pages/verification/page.tsx";
+import StreamTermsPage from "./pages/stream-terms/page.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 export default function App() {
@@ -51,6 +53,8 @@ export default function App() {
           {/* Full-screen pages outside layout */}
           <Route path="/live/start" element={<StartLivePage />} />
           <Route path="/live/:id" element={<LiveStreamPage />} />
+          <Route path="/verification" element={<VerificationPage />} />
+          <Route path="/stream-terms" element={<StreamTermsPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

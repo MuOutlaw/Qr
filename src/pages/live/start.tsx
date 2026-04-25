@@ -175,9 +175,31 @@ function StartStreamForm() {
       {canStream === undefined ? (
         <Skeleton className="h-12 w-64 bg-white/10" />
       ) : !canStream.allowed ? (
-        <div className="flex items-start gap-3 bg-red-600/20 border border-red-500/30 rounded-2xl p-4 max-w-sm text-right">
-          <AlertCircle className="h-5 w-5 text-red-400 mt-0.5 shrink-0" />
-          <p className="text-sm text-red-300">{canStream.reason}</p>
+        <div className="space-y-4 w-full max-w-sm">
+          <div className="flex items-start gap-3 bg-red-600/20 border border-red-500/30 rounded-2xl p-4 text-right">
+            <AlertCircle className="h-5 w-5 text-red-400 mt-0.5 shrink-0" />
+            <p className="text-sm text-red-300">{canStream.reason}</p>
+          </div>
+          {/* Guide user to next step */}
+          {(canStream.step === "phone" || canStream.step === "id" || canStream.step === "id_rejected") && (
+            <Button
+              onClick={() => navigate("/verification")}
+              className="w-full bg-white text-black rounded-xl font-bold hover:bg-white/90"
+            >
+              توثيق الحساب الآن
+            </Button>
+          )}
+          {canStream.step === "terms" && (
+            <Button
+              onClick={() => navigate("/stream-terms")}
+              className="w-full bg-white text-black rounded-xl font-bold hover:bg-white/90"
+            >
+              قراءة وقبول الشروط
+            </Button>
+          )}
+          {canStream.step === "id_pending" && (
+            <p className="text-xs text-white/40 text-center">في انتظار مراجعة الإدارة...</p>
+          )}
         </div>
       ) : (
         <div className="w-full max-w-sm space-y-4">

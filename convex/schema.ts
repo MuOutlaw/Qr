@@ -21,6 +21,21 @@ export default defineSchema({
     // Subscription
     subscriptionPackage: v.optional(v.string()),
     subscriptionExpiresAt: v.optional(v.string()),
+    // Identity verification
+    verificationStatus: v.optional(v.union(
+      v.literal("pending"),
+      v.literal("approved"),
+      v.literal("rejected"),
+    )),
+    verificationIdImageId: v.optional(v.string()),
+    verificationIdType: v.optional(v.union(v.literal("national_id"), v.literal("residence"))),
+    verificationSubmittedAt: v.optional(v.string()),
+    verificationReviewedAt: v.optional(v.string()),
+    verificationRejectionReason: v.optional(v.string()),
+    phoneOtpVerified: v.optional(v.boolean()),
+    // Agreed to terms
+    agreedToStreamTerms: v.optional(v.boolean()),
+    streamTermsAgreedAt: v.optional(v.string()),
   })
     .index("by_token", ["tokenIdentifier"])
     .index("by_phone", ["phone"]),

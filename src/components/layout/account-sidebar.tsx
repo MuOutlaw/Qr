@@ -13,6 +13,7 @@ import {
   Shield,
   Settings,
   LogOut,
+  ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils.ts";
 import { useAuth } from "@/hooks/use-auth.ts";
@@ -21,6 +22,7 @@ import { Authenticated } from "convex/react";
 const SIDEBAR_ITEMS = [
   { path: "/", icon: Home, label: "الرئيسية" },
   { path: "/profile", icon: User, label: "ملفي الشخصي" },
+  { path: "/verification", icon: ShieldCheck, label: "توثيق الحساب" },
   { path: "/subscriptions", icon: Crown, label: "الاشتراكات" },
   { path: "/pay-fees", icon: CreditCard, label: "سداد الرسوم" },
   { path: "/classifieds", icon: Newspaper, label: "الإعلانات" },

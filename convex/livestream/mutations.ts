@@ -7,29 +7,36 @@ export const canStream = query({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) return { allowed: false, reason: "يجب تسجيل الدخول" };
+    if (!identity) return { allowed: false, reason: "يجب تسجيل الدخول", step: "auth" };
 
     const user = await ctx.db
       .query("users")
       .withIndex("by_token", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
       .unique();
-    if (!user) return { allowed: false, reason: "المستخدم غير موجود" };
+    if (!user) return { allowed: false, reason: "المستخدم غير موجود", step: "auth" };
 
-    if (!user.isVerified) {
-      return { allowed: false, reason: "يجب توثيق حسابك أولاً. تواصل مع الإدارة." };
+    // Step 1: Phone OTP must be verified
+    if (!user.phoneOtpVerified) {
+      return { allowed: false, reason: "يجب التحقق من رقم الجوال أولاً", step: "phone" };
     }
 
-    const now = new Date().toISOString();
-    const hasPremium =
-      !!user.subscriptionPackage &&
-      !!user.subscriptionExpiresAt &&
-      user.subscriptionExpiresAt > now;
-
-    if (!hasPremium) {
-      return { allowed: false, reason: "البث المباشر متاح فقط لأصحاب الباقات المميزة." };
+    // Step 2: Identity must be verified (approved by admin)
+    if (user.verificationStatus !== "approved") {
+      if (user.verificationStatus === "pending") {
+        return { allowed: false, reason: "طلب توثيق هويتك قيد المراجعة. سيتم إشعارك عند الموافقة.", step: "id_pending" };
+      }
+      if (user.verificationStatus === "rejected") {
+        return { allowed: false, reason: `تم رفض طلب التوثيق: ${user.verificationRejectionReason ?? ""}. يرجى إعادة التقديم.`, step: "id_rejected" };
+      }
+      return { allowed: false, reason: "يجب توثيق هويتك (هوية وطنية أو إقامة) للبث", step: "id" };
     }
 
-    return { allowed: true, reason: null };
+    // Step 3: Must agree to streaming terms
+    if (!user.agreedToStreamTerms) {
+      return { allowed: false, reason: "يجب الموافقة على شروط البث والتعهد", step: "terms" };
+    }
+
+    return { allowed: true, reason: null, step: "ok" };
   },
 });
 
@@ -50,19 +57,13 @@ export const startStream = mutation({
     }
 
     // Only verified accounts can stream
-    if (!user.isVerified) {
-      throw new ConvexError({ code: "FORBIDDEN", message: "يجب توثيق حسابك أولاً لبدء بث مباشر. تواصل مع الإدارة للتوثيق." });
+    if (user.verificationStatus !== "approved") {
+      throw new ConvexError({ code: "FORBIDDEN", message: "يجب توثيق هويتك أولاً لبدء بث مباشر." });
     }
 
-    // Only users with active premium subscription can stream
-    const now = new Date().toISOString();
-    const hasPremium =
-      !!user.subscriptionPackage &&
-      !!user.subscriptionExpiresAt &&
-      user.subscriptionExpiresAt > now;
-
-    if (!hasPremium) {
-      throw new ConvexError({ code: "FORBIDDEN", message: "البث المباشر متاح فقط لأصحاب الباقات المميزة. يرجى الاشتراك في إحدى الباقات." });
+    // Must agree to terms
+    if (!user.agreedToStreamTerms) {
+      throw new ConvexError({ code: "FORBIDDEN", message: "يجب الموافقة على شروط البث والتعهد أولاً." });
     }
 
     // Check if there's already an active stream

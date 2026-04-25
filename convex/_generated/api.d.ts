@@ -46,6 +46,7 @@ import type * as spam_protection from "../spam_protection.js";
 import type * as subscriptions_mutations from "../subscriptions/mutations.js";
 import type * as subscriptions_queries from "../subscriptions/queries.js";
 import type * as users from "../users.js";
+import type * as verification_index from "../verification/index.js";
 import type * as verification_mutations from "../verification/mutations.js";
 import type * as verification_queries from "../verification/queries.js";
 
@@ -94,6 +95,7 @@ declare const fullApi: ApiFromModules<{
   "subscriptions/mutations": typeof subscriptions_mutations;
   "subscriptions/queries": typeof subscriptions_queries;
   users: typeof users;
+  "verification/index": typeof verification_index;
   "verification/mutations": typeof verification_mutations;
   "verification/queries": typeof verification_queries;
 }>;

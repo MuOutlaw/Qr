@@ -2,8 +2,9 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { SlidersHorizontal, X, MapPin, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
-import { CATEGORIES, LOCATIONS } from "@/lib/mock-data.ts";
+import { CATEGORIES } from "@/lib/mock-data.ts";
 import { cn } from "@/lib/utils.ts";
+import LocationSelector from "@/components/ui/location-selector.tsx";
 
 type AuctionFiltersProps = {
   category: string;
@@ -19,6 +20,7 @@ export default function AuctionFilters({
   onLocationChange,
 }: AuctionFiltersProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [region, setRegion] = useState("");
 
   const activeCount =
     (category !== "all" ? 1 : 0) + (location !== "" ? 1 : 0);
@@ -26,6 +28,12 @@ export default function AuctionFilters({
   const clearAll = () => {
     onCategoryChange("all");
     onLocationChange("");
+    setRegion("");
+  };
+
+  const handleRegionChange = (r: string) => {
+    setRegion(r);
+    onLocationChange(""); // reset city
   };
 
   return (
@@ -101,33 +109,12 @@ export default function AuctionFilters({
                   <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
                   <span className="text-xs font-bold text-muted-foreground">الموقع</span>
                 </div>
-                <div className="flex flex-wrap gap-1.5">
-                  <button
-                    onClick={() => onLocationChange("")}
-                    className={cn(
-                      "px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer transition-colors",
-                      location === ""
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                    )}
-                  >
-                    الكل
-                  </button>
-                  {LOCATIONS.map((loc) => (
-                    <button
-                      key={loc}
-                      onClick={() => onLocationChange(loc)}
-                      className={cn(
-                        "px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer transition-colors",
-                        location === loc
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                      )}
-                    >
-                      {loc}
-                    </button>
-                  ))}
-                </div>
+                <LocationSelector
+                  region={region}
+                  city={location}
+                  onRegionChange={handleRegionChange}
+                  onCityChange={onLocationChange}
+                />
               </div>
             </div>
           </motion.div>

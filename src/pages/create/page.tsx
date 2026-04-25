@@ -24,6 +24,7 @@ import { api } from "@/convex/_generated/api.js";
 import { useConvex } from "convex/react";
 import type { Id } from "@/convex/_generated/dataModel.js";
 import { AnimatePresence } from "motion/react";
+import LocationSelector from "@/components/ui/location-selector.tsx";
 
 function CreateListingPage() {
   const navigate = useNavigate();
@@ -34,6 +35,7 @@ function CreateListingPage() {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [location, setLocation] = useState("");
+  const [region, setRegion] = useState("");
   const [priceType, setPriceType] = useState<"fixed" | "auction">("fixed");
   const [price, setPrice] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -66,7 +68,8 @@ function CreateListingPage() {
   const handleSubmit = async () => {
     if (!title.trim()) { toast.error("يرجى إدخال عنوان الإعلان"); return; }
     if (!category) { toast.error("يرجى اختيار النوع"); return; }
-    if (!location) { toast.error("يرجى اختيار الموقع"); return; }
+    if (!region) { toast.error("يرجى اختيار المنطقة"); return; }
+    if (!location) { toast.error("يرجى اختيار المدينة"); return; }
     if (!price) { toast.error("يرجى إدخال السعر"); return; }
 
     setIsSubmitting(true);
@@ -189,7 +192,7 @@ function CreateListingPage() {
         </motion.div>
 
         {/* Category & Location */}
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="space-y-4">
           <div className="space-y-2">
             <Label className="text-sm font-bold flex items-center gap-1.5"><Tag className="h-3.5 w-3.5 text-muted-foreground" />النوع</Label>
             <Select value={category} onValueChange={setCategory}>
@@ -202,15 +205,14 @@ function CreateListingPage() {
             </Select>
           </div>
           <div className="space-y-2">
-            <Label className="text-sm font-bold flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5 text-muted-foreground" />الموقع</Label>
-            <Select value={location} onValueChange={setLocation}>
-              <SelectTrigger className="rounded-xl h-11"><SelectValue placeholder="اختر الموقع" /></SelectTrigger>
-              <SelectContent>
-                {LOCATIONS.map((loc) => (
-                  <SelectItem key={loc} value={loc}>{loc}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Label className="text-sm font-bold">الموقع</Label>
+            <LocationSelector
+              region={region}
+              city={location}
+              onRegionChange={(r) => { setRegion(r); setLocation(""); }}
+              onCityChange={setLocation}
+              required
+            />
           </div>
         </motion.div>
 
