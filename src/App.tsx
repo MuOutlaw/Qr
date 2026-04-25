@@ -4,6 +4,7 @@ import AuthCallback from "./pages/auth/Callback.tsx";
 import AppLayout from "./components/layout/app-layout.tsx";
 import Index from "./pages/Index.tsx";
 import LiveStreamPage from "./pages/live/page.tsx";
+import AuctionsPage from "./pages/auctions/page.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route element={<AppLayout />}>
             <Route path="/" element={<Index />} />
+            <Route path="/auctions" element={<AuctionsPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           </Route>
           {/* Full-screen pages outside layout */}
