@@ -17,7 +17,7 @@ export default function AppLayout() {
   const navigate = useNavigate();
 
   const handleNav = (path: string) => {
-    const comingSoon = ["/classifieds", "/create", "/profile"];
+    const comingSoon = ["/create", "/profile"];
     if (comingSoon.includes(path)) {
       toast.info("Coming soon in a future milestone!");
       return;
