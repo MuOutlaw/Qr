@@ -187,19 +187,14 @@ function MessagesContent() {
 
   return (
     <div className="min-h-screen bg-background">
-      <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border"
-      >
-        <div className="flex items-center gap-3 px-4 py-3">
+      <div className="px-4 py-4 border-b border-border">
+        <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
             <MessageCircle className="h-5 w-5 text-primary" />
           </div>
           <h1 className="text-lg font-bold text-foreground">الرسائل</h1>
         </div>
-      </motion.header>
+      </div>
       <ConversationList onSelect={setSelectedConv} />
     </div>
   );

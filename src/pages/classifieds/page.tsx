@@ -40,14 +40,9 @@ export default function ClassifiedsPage() {
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
-      {/* Header */}
-      <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border"
-      >
-        <div className="flex items-center justify-between px-4 py-3">
+      {/* Page Title */}
+      <div className="px-4 py-4 border-b border-border">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
               <Newspaper className="h-5 w-5 text-primary" />
@@ -59,7 +54,6 @@ export default function ClassifiedsPage() {
               </p>
             </div>
           </div>
-
           {/* View Toggle */}
           <div className="flex items-center gap-1 bg-secondary rounded-lg p-1">
             <Button
@@ -80,7 +74,7 @@ export default function ClassifiedsPage() {
             </Button>
           </div>
         </div>
-      </motion.header>
+      </div>
 
       {/* Filters */}
       <div className="px-4 pt-4">

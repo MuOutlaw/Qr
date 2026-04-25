@@ -112,13 +112,8 @@ function CreateListingPage() {
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
-      <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border"
-      >
-        <div className="flex items-center gap-3 px-4 py-3">
+      <div className="px-4 py-4 border-b border-border">
+        <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}
             className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
@@ -127,7 +122,7 @@ function CreateListingPage() {
           </button>
           <h1 className="text-lg font-bold text-foreground">إنشاء إعلان</h1>
         </div>
-      </motion.header>
+      </div>
 
       <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
         {/* Media Upload */}
