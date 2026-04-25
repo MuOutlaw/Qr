@@ -2,7 +2,6 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Home, Gavel, Newspaper, Plus, User } from "lucide-react";
 import { cn } from "@/lib/utils.ts";
 import { motion } from "motion/react";
-import { toast } from "sonner";
 
 const NAV_ITEMS = [
   { path: "/", icon: Home, label: "الرئيسية" },
@@ -17,11 +16,6 @@ export default function AppLayout() {
   const navigate = useNavigate();
 
   const handleNav = (path: string) => {
-    const comingSoon = ["/create"];
-    if (comingSoon.includes(path)) {
-      toast.info("Coming soon in a future milestone!");
-      return;
-    }
     navigate(path);
   };
 
