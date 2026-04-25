@@ -3,7 +3,7 @@ import { Eye, Radio } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import { type LiveStream, formatPrice, formatViewers } from "@/lib/mock-data.ts";
-import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 type LiveStreamCardProps = {
   stream: LiveStream;
@@ -11,8 +11,10 @@ type LiveStreamCardProps = {
 };
 
 export default function LiveStreamCard({ stream, index }: LiveStreamCardProps) {
+  const navigate = useNavigate();
+
   const handleJoinLive = () => {
-    toast.info("Coming soon in a future milestone!");
+    navigate(`/live/${stream._id}`);
   };
 
   return (
