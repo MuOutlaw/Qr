@@ -1,0 +1,56 @@
+{
+  "name": "الصفاة — سوق الماشية والحلال",
+  "short_name": "الصفاة",
+  "description": "سوق رقمي متخصص في بيع وشراء الإبل والأغنام والأبقار والماعز والأعلاف والمزارع في المملكة العربية السعودية ودول الخليج.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f5f5f0",
+  "theme_color": "#0B3D2E",
+  "orientation": "portrait-primary",
+  "lang": "ar",
+  "dir": "rtl",
+  "id": "/",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/icon/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["shopping", "business", "lifestyle"],
+  "shortcuts": [
+    {
+      "name": "أضف إعلان جديد",
+      "short_name": "أضف إعلان",
+      "url": "/create?source=pwa",
+      "icons": [{"src": "/icon/icon-192.png", "sizes": "192x192", "type": "image/png"}]
+    },
+    {
+      "name": "الرسائل",
+      "short_name": "الرسائل",
+      "url": "/messages?source=pwa",
+      "icons": [{"src": "/icon/icon-192.png", "sizes": "192x192", "type": "image/png"}]
+    }
+  ]
+}
