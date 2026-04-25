@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as auctions_internals from "../auctions/internals.js";
 import type * as users from "../users.js";
 
 import type {
@@ -17,6 +18,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  "auctions/internals": typeof auctions_internals;
   users: typeof users;
 }>;
 
