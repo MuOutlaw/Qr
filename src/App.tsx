@@ -8,6 +8,7 @@ import AuctionsPage from "./pages/auctions/page.tsx";
 import ClassifiedsPage from "./pages/classifieds/page.tsx";
 import SellerProfilePage from "./pages/seller/page.tsx";
 import CreateListingPage from "./pages/create/page.tsx";
+import SearchPage from "./pages/search/page.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
             <Route path="/profile" element={<SellerProfilePage />} />
             <Route path="/seller/:id" element={<SellerProfilePage />} />
             <Route path="/create" element={<CreateListingPage />} />
+            <Route path="/search" element={<SearchPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           </Route>
           {/* Full-screen pages outside layout */}

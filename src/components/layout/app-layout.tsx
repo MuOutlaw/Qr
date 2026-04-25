@@ -1,11 +1,12 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Home, Gavel, Newspaper, Plus, User } from "lucide-react";
+import { Home, Gavel, Newspaper, Plus, User, Search } from "lucide-react";
 import { cn } from "@/lib/utils.ts";
 import { motion } from "motion/react";
 
 const NAV_ITEMS = [
   { path: "/", icon: Home, label: "الرئيسية" },
   { path: "/auctions", icon: Gavel, label: "المزادات" },
+  { path: "/search", icon: Search, label: "بحث" },
   { path: "/classifieds", icon: Newspaper, label: "الإعلانات" },
   { path: "/create", icon: Plus, label: "أضف" },
   { path: "/profile", icon: User, label: "حسابي" },
