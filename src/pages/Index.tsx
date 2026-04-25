@@ -31,7 +31,7 @@ export default function Index() {
 
             
             <div>
-              <h1 className="text-lg font-bold text-foreground leading-tight">
+              <h1 className="text-lg font-bold text-foreground leading-tight px-0">
                 سوق الصفاة
               </h1>
               
