@@ -1,6 +1,9 @@
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
+// Emails that are automatically granted admin role on login
+const ADMIN_EMAILS = ["iiimmcc30@gmail.com", "madunitesp@gmail.com"];
+
 export const updateCurrentUser = mutation({
   args: {},
   handler: async (ctx) => {
@@ -12,6 +15,8 @@ export const updateCurrentUser = mutation({
       });
     }
 
+    const isAdminEmail = identity.email ? ADMIN_EMAILS.includes(identity.email) : false;
+
     const user = await ctx.db
       .query("users")
       .withIndex("by_token", (q) =>
@@ -20,10 +25,11 @@ export const updateCurrentUser = mutation({
       .unique();
 
     if (user !== null) {
-      // Update name/email if changed
-      const updates: { name?: string; email?: string } = {};
+      // Update name/email if changed, and ensure admin role for admin emails
+      const updates: { name?: string; email?: string; role?: "admin" | "user" } = {};
       if (identity.name && identity.name !== user.name) updates.name = identity.name;
       if (identity.email && identity.email !== user.email) updates.email = identity.email;
+      if (isAdminEmail && user.role !== "admin") updates.role = "admin";
       if (Object.keys(updates).length > 0) {
         await ctx.db.patch(user._id, updates);
       }
@@ -38,7 +44,7 @@ export const updateCurrentUser = mutation({
       phoneVerified: false,
       rating: 0,
       ratingCount: 0,
-      role: "user",
+      role: isAdminEmail ? "admin" : "user",
       joinedAt: new Date().toISOString(),
     });
   },

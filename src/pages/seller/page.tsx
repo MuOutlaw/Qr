@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
-import { ArrowRight, Newspaper, Video, LogIn, User, Bell, Settings } from "lucide-react";
+import { ArrowRight, Newspaper, Video, LogIn, User, Bell, Settings, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import {
@@ -28,6 +28,7 @@ function MyProfileContent() {
   const [activeTab, setActiveTab] = useState<Tab>("listings");
   const navigate = useNavigate();
   const currentUser = useQuery(api.users.getCurrentUser);
+  const isAdmin = useQuery(api.admin.queries.isAdmin);
   const notifications = useQuery(api.notifications.queries.getMyNotifications, { limit: 5 });
 
   const TABS = [
@@ -56,6 +57,14 @@ function MyProfileContent() {
           >
             <Bell className="h-4 w-4" />
           </button>
+          {isAdmin && (
+            <button
+              onClick={() => navigate("/admin")}
+              className="p-2 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 transition-colors cursor-pointer"
+            >
+              <Shield className="h-4 w-4" />
+            </button>
+          )}
           <button
             onClick={() => navigate("/settings")}
             className="p-2 rounded-xl bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"

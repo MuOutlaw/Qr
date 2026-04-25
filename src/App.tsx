@@ -13,6 +13,7 @@ import FavoritesPage from "./pages/favorites/page.tsx";
 import MessagesPage from "./pages/messages/page.tsx";
 import NotificationsPage from "./pages/notifications/page.tsx";
 import SettingsPage from "./pages/settings/page.tsx";
+import AdminPage from "./pages/admin/page.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 export default function App() {
@@ -33,6 +34,7 @@ export default function App() {
             <Route path="/messages" element={<MessagesPage />} />
             <Route path="/notifications" element={<NotificationsPage />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/admin" element={<AdminPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           </Route>
           {/* Full-screen pages outside layout */}
