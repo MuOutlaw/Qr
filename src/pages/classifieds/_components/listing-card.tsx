@@ -75,7 +75,7 @@ export default function ListingCard({ listing, index, view }: ListingCardProps) 
   const timeAgo = formatDistanceToNow(new Date(listing.createdAt), { addSuffix: true, locale: ar });
   const image = listing.images[0] ?? FALLBACK_IMAGE;
 
-  const handleClick = () => navigate(`/listings/${listing._id}`);
+  const handleClick = () => navigate(`/listing/${listing._id}`);
 
   if (view === "list") {
     return (

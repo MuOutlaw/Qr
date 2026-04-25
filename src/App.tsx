@@ -15,6 +15,7 @@ import NotificationsPage from "./pages/notifications/page.tsx";
 import SettingsPage from "./pages/settings/page.tsx";
 import AdminPage from "./pages/admin/page.tsx";
 import SubscriptionsPage from "./pages/subscriptions/page.tsx";
+import ListingPage from "./pages/listing/page.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 export default function App() {
@@ -37,6 +38,7 @@ export default function App() {
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/subscriptions" element={<SubscriptionsPage />} />
+            <Route path="/listing/:id" element={<ListingPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           </Route>
           {/* Full-screen pages outside layout */}
