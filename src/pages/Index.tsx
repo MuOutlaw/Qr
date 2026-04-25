@@ -12,8 +12,8 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-  EmptyDescription,
-} from "@/components/ui/empty.tsx";
+  EmptyDescription } from
+"@/components/ui/empty.tsx";
 
 type CategoryFilter = "all" | "camels" | "sheep" | "goats" | "horses" | "cattle";
 
@@ -25,14 +25,14 @@ export default function Index() {
   const activeStreams = useQuery(api.livestream.mutations.getActiveStreams);
 
   // فلترة حسب الفئة على الواجهة (بما أن الباكند لا يدعم فلترة بالفئة مباشرة)
-  const streams = activeStreams === undefined
-    ? undefined
-    : category === "all"
-      ? activeStreams
-      : activeStreams.filter((s) => {
-          // نحاول مطابقة عنوان المزاد بالفئة
-          return true; // نعرض الكل حالياً بما أن البيانات تأتي من المزادات
-        });
+  const streams = activeStreams === undefined ?
+  undefined :
+  category === "all" ?
+  activeStreams :
+  activeStreams.filter((s) => {
+    // نحاول مطابقة عنوان المزاد بالفئة
+    return true; // نعرض الكل حالياً بما أن البيانات تأتي من المزادات
+  });
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
@@ -57,12 +57,12 @@ export default function Index() {
               className="p-2 rounded-xl bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
               <Search className="h-4 w-4" />
             </button>
-            <div className="flex items-center gap-1.5 bg-red-600/10 text-red-500 rounded-full px-3 py-1.5">
-              <Radio className="h-3.5 w-3.5 animate-pulse" />
-              <span className="text-xs font-bold">
-                {streams ? `${streams.length} بث مباشر` : "..."}
-              </span>
-            </div>
+            
+
+
+
+
+            
           </div>
         </div>
         <CategoryFilter
@@ -83,14 +83,14 @@ export default function Index() {
 
       {/* Live Stream Grid */}
       <div className="px-4 pb-6">
-        {streams === undefined ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="aspect-[9/14] sm:aspect-[9/12] rounded-2xl" />
-            ))}
-          </div>
-        ) : streams.length === 0 ? (
-          <Empty>
+        {streams === undefined ?
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {Array.from({ length: 4 }).map((_, i) =>
+          <Skeleton key={i} className="aspect-[9/14] sm:aspect-[9/12] rounded-2xl" />
+          )}
+          </div> :
+        streams.length === 0 ?
+        <Empty>
             <EmptyHeader>
               <EmptyMedia variant="icon"><Video /></EmptyMedia>
               <EmptyTitle>لا توجد بثوث مباشرة الآن</EmptyTitle>
@@ -98,15 +98,15 @@ export default function Index() {
                 لا يوجد بث مباشر حالياً. تحقق لاحقاً أو تصفح الإعلانات والمزادات.
               </EmptyDescription>
             </EmptyHeader>
-          </Empty>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {streams.map((stream, i) => (
-              <LiveStreamCard key={stream._id} stream={stream} index={i} />
-            ))}
+          </Empty> :
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {streams.map((stream, i) =>
+          <LiveStreamCard key={stream._id} stream={stream} index={i} />
+          )}
           </div>
-        )}
+        }
       </div>
-    </div>
-  );
+    </div>);
+
 }
