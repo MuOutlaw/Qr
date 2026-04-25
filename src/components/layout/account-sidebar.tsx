@@ -131,11 +131,9 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 // Desktop sidebar (always visible on md+)
 export function AccountSidebarDesktop() {
   return (
-    <Authenticated>
-      <aside className="hidden md:flex flex-col w-56 shrink-0 border-l border-border bg-background/50 h-full">
-        <SidebarContent />
-      </aside>
-    </Authenticated>
+    <aside className="hidden md:flex flex-col w-56 shrink-0 border-l border-border bg-background/50 h-full">
+      <SidebarContent />
+    </aside>
   );
 }
 

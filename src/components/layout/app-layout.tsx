@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { User, Plus, X, Video, FileText } from "lucide-react";
+import { User, Plus, X, Video, FileText, Search } from "lucide-react";
 import { cn } from "@/lib/utils.ts";
 import { motion, AnimatePresence } from "motion/react";
 import { Authenticated } from "convex/react";
@@ -106,6 +106,28 @@ export default function AppLayout() {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        {/* Top Search Bar */}
+        <header className="sticky top-0 z-40 bg-background/90 backdrop-blur-xl border-b border-border px-4 py-2.5 flex items-center gap-3">
+          <button
+            onClick={() => navigate("/search")}
+            className="flex-1 flex items-center gap-2 bg-muted rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer text-sm text-right"
+          >
+            <Search className="h-4 w-4 shrink-0" />
+            <span>ابحث في سوق الصفاة...</span>
+          </button>
+          {/* Mobile hamburger */}
+          <Authenticated>
+            <button
+              onClick={() => setDrawerOpen(true)}
+              className="p-2 rounded-xl bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer md:hidden"
+            >
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </Authenticated>
+        </header>
+
         <main className="flex-1 overflow-auto pb-20 md:pb-0">
           <Outlet />
         </main>
@@ -232,17 +254,6 @@ export default function AppLayout() {
           />
         </nav>
 
-        {/* Mobile hamburger to open sidebar */}
-        <Authenticated>
-          <button
-            onClick={() => setDrawerOpen(true)}
-            className="fixed top-3 left-3 z-50 p-2 rounded-xl bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer md:hidden"
-          >
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-        </Authenticated>
       </div>
     </div>
   );
