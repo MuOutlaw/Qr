@@ -141,7 +141,7 @@ export default function AppLayout() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 20, scale: 0.9 }}
                   transition={{ duration: 0.2 }}
-                  onClick={() => handleCreateOption("/live/new")}
+                  onClick={() => handleCreateOption("/live/start")}
                   className="flex items-center gap-3 bg-red-600 text-white px-6 py-3.5 rounded-2xl shadow-xl cursor-pointer"
                 >
                   <Video className="h-5 w-5" />

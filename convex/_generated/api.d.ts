@@ -27,6 +27,7 @@ import type * as favorites_index from "../favorites/index.js";
 import type * as helpers from "../helpers.js";
 import type * as listings_mutations from "../listings/mutations.js";
 import type * as listings_queries from "../listings/queries.js";
+import type * as livestream_agoraToken from "../livestream/agoraToken.js";
 import type * as livestream_mutations from "../livestream/mutations.js";
 import type * as messages_mutations from "../messages/mutations.js";
 import type * as messages_queries from "../messages/queries.js";
@@ -74,6 +75,7 @@ declare const fullApi: ApiFromModules<{
   helpers: typeof helpers;
   "listings/mutations": typeof listings_mutations;
   "listings/queries": typeof listings_queries;
+  "livestream/agoraToken": typeof livestream_agoraToken;
   "livestream/mutations": typeof livestream_mutations;
   "messages/mutations": typeof messages_mutations;
   "messages/queries": typeof messages_queries;
