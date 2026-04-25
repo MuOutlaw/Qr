@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import {
   ArrowRight,
-  Video,
   Send,
   MapPin,
   Tag,
@@ -64,14 +63,6 @@ export default function CreateListingPage() {
     setIsSubmitting(false);
     toast.success("تم نشر الإعلان بنجاح!");
     navigate("/");
-  };
-
-  const handleStartLive = () => {
-    if (!title.trim()) {
-      toast.error("يرجى إدخال عنوان البث أولاً");
-      return;
-    }
-    toast.success("جاري تجهيز البث المباشر...");
   };
 
   // Filter out "all" from categories for the select
@@ -248,7 +239,6 @@ export default function CreateListingPage() {
           transition={{ delay: 0.4, duration: 0.3, ease: "easeOut" }}
           className="space-y-3 pb-8"
         >
-          {/* Publish */}
           <Button
             onClick={handleSubmit}
             disabled={isSubmitting}
@@ -256,16 +246,6 @@ export default function CreateListingPage() {
           >
             <Send className="h-5 w-5" />
             {isSubmitting ? "جاري النشر..." : "نشر الإعلان"}
-          </Button>
-
-          {/* Start Live */}
-          <Button
-            onClick={handleStartLive}
-            variant="secondary"
-            className="w-full h-12 rounded-xl font-bold text-base gap-2 cursor-pointer bg-red-600/10 text-red-600 hover:bg-red-600/20 dark:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20 border-0"
-          >
-            <Video className="h-5 w-5" />
-            بدء بث مباشر
           </Button>
         </motion.div>
       </div>

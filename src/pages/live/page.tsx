@@ -13,10 +13,31 @@ import { toast } from "sonner";
 export default function LiveStreamPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const stream = useLiveStream(id ?? "ls1");
-  const chatMessages = useChatMessages(id ?? "ls1");
+  const stream = useLiveStream(id === "new" ? "ls1" : (id ?? "ls1"));
+  const chatMessages = useChatMessages(id === "new" ? "ls1" : (id ?? "ls1"));
   const [isMuted, setIsMuted] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+
+  // Handle "new" route — coming soon
+  if (id === "new") {
+    return (
+      <div className="h-screen w-full flex flex-col items-center justify-center bg-black text-white gap-4" dir="rtl">
+        <div className="w-20 h-20 rounded-full bg-red-600/20 flex items-center justify-center">
+          <Volume2 className="h-8 w-8 text-red-500" />
+        </div>
+        <h2 className="text-xl font-bold">البث المباشر قريباً!</h2>
+        <p className="text-sm text-white/60 text-center max-w-xs">
+          خاصية البث المباشر قيد التطوير وستكون متاحة قريباً
+        </p>
+        <button
+          onClick={() => navigate("/")}
+          className="mt-4 px-6 py-2.5 rounded-full bg-white text-black font-bold text-sm cursor-pointer hover:opacity-90 transition-opacity"
+        >
+          العودة للرئيسية
+        </button>
+      </div>
+    );
+  }
 
   if (!stream) {
     return (
