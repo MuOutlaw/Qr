@@ -7,7 +7,6 @@ import { Authenticated, Unauthenticated, AuthLoading } from "convex/react";
 import { ConvexError } from "convex/values";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  ArrowRight,
   Crown,
   Check,
   Upload,
@@ -27,6 +26,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils.ts";
 import { formatDistanceToNow } from "date-fns";
 import { ar } from "date-fns/locale";
+import AccountLayout from "@/components/layout/account-layout.tsx";
 
 type PackageId = "weekly" | "biweekly" | "monthly";
 
@@ -302,21 +302,7 @@ function SubscriptionContent() {
   }
 
   return (
-    <div className="min-h-screen bg-background" dir="rtl">
-      {/* Header */}
-      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border px-4 py-3 flex items-center gap-3">
-        <button
-          onClick={() => step !== "packages" ? setStep("packages") : navigate(-1)}
-          className="p-2 rounded-xl bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-        >
-          <ArrowRight className="h-4 w-4" />
-        </button>
-        <div className="flex items-center gap-2">
-          <Crown className="h-4 w-4 text-primary" />
-          <h1 className="text-lg font-bold">باقات الاشتراك</h1>
-        </div>
-      </div>
-
+    <div className="bg-background" dir="rtl">
       <div className="max-w-xl mx-auto p-4">
         <AnimatePresence mode="wait">
 
@@ -546,7 +532,7 @@ function SubscriptionContent() {
 
 export default function SubscriptionsPage() {
   return (
-    <>
+    <AccountLayout title="باقات الاشتراك">
       <AuthLoading>
         <div className="p-4 space-y-4" dir="rtl">
           <Skeleton className="h-12 w-full" />
@@ -557,7 +543,7 @@ export default function SubscriptionsPage() {
         <SubscriptionContent />
       </Authenticated>
       <Unauthenticated>
-        <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-6 px-6" dir="rtl">
+        <div className="min-h-[60vh] bg-background flex flex-col items-center justify-center gap-6 px-6" dir="rtl">
           <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center">
             <Crown className="h-10 w-10 text-primary" />
           </div>
@@ -568,6 +554,6 @@ export default function SubscriptionsPage() {
           <SignInButton />
         </div>
       </Unauthenticated>
-    </>
+    </AccountLayout>
   );
 }

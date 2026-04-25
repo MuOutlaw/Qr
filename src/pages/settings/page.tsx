@@ -6,7 +6,6 @@ import { api } from "@/convex/_generated/api.js";
 import { Authenticated, Unauthenticated, AuthLoading } from "convex/react";
 import { ConvexError } from "convex/values";
 import {
-  ArrowRight,
   User,
   MapPin,
   FileText,
@@ -26,6 +25,7 @@ import { SignInButton } from "@/components/ui/signin.tsx";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth.ts";
 import { cn } from "@/lib/utils.ts";
+import AccountLayout from "@/components/layout/account-layout.tsx";
 
 const SAUDI_CITIES = [
   "الرياض", "جدة", "مكة المكرمة", "المدينة المنورة", "الدمام",
@@ -110,18 +110,7 @@ function SettingsContent() {
   ];
 
   return (
-    <div className="min-h-screen bg-background" dir="rtl">
-      {/* Header */}
-      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border px-4 py-3 flex items-center gap-3">
-        <button
-          onClick={() => navigate(-1)}
-          className="p-2 rounded-xl bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-        >
-          <ArrowRight className="h-4 w-4" />
-        </button>
-        <h1 className="text-lg font-bold">الإعدادات</h1>
-      </div>
-
+    <div className="bg-background" dir="rtl">
       <div className="flex flex-col md:flex-row gap-0 md:gap-6 p-4 max-w-3xl mx-auto">
         {/* Sidebar nav */}
         <aside className="w-full md:w-56 shrink-0 mb-4 md:mb-0">
@@ -379,7 +368,7 @@ function SettingsContent() {
 
 export default function SettingsPage() {
   return (
-    <>
+    <AccountLayout title="الإعدادات">
       <AuthLoading>
         <div className="p-4 space-y-4" dir="rtl">
           <Skeleton className="h-12 w-full" />
@@ -390,7 +379,7 @@ export default function SettingsPage() {
         <SettingsContent />
       </Authenticated>
       <Unauthenticated>
-        <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-6 px-6" dir="rtl">
+        <div className="min-h-[60vh] bg-background flex flex-col items-center justify-center gap-6 px-6" dir="rtl">
           <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center">
             <Shield className="h-10 w-10 text-primary" />
           </div>
@@ -401,6 +390,6 @@ export default function SettingsPage() {
           <SignInButton />
         </div>
       </Unauthenticated>
-    </>
+    </AccountLayout>
   );
 }

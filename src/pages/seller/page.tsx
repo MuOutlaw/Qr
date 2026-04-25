@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
-import { ArrowRight, Newspaper, Video, LogIn, User, Bell, Settings, Shield, Crown } from "lucide-react";
+import { ArrowRight, Newspaper, Video, LogIn, User, Bell, Shield, Crown, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import {
@@ -21,11 +21,13 @@ import SellerHeader from "./_components/seller-header.tsx";
 import LiveHistoryCard from "./_components/live-history-card.tsx";
 import SellerListingCard from "./_components/seller-listing-card.tsx";
 import { cn } from "@/lib/utils.ts";
+import { AccountSidebarDesktop, AccountSidebarMobile } from "@/components/layout/account-sidebar.tsx";
 
 type Tab = "listings" | "live";
 
 function MyProfileContent() {
   const [activeTab, setActiveTab] = useState<Tab>("listings");
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate();
   const currentUser = useQuery(api.users.getCurrentUser);
   const isAdmin = useQuery(api.admin.queries.isAdmin);
@@ -38,194 +40,195 @@ function MyProfileContent() {
 
   if (currentUser === undefined) {
     return (
-      <div className="p-4 space-y-4">
-        <Skeleton className="h-32 w-full rounded-2xl" />
-        <Skeleton className="h-24 w-full rounded-xl" />
+      <div className="flex h-screen bg-background" dir="rtl">
+        <AccountSidebarDesktop />
+        <div className="flex-1 p-4 space-y-4">
+          <Skeleton className="h-32 w-full rounded-2xl" />
+          <Skeleton className="h-24 w-full rounded-xl" />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background" dir="rtl">
-      {/* Header */}
-      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border px-4 py-3 flex items-center justify-between">
-        <h1 className="text-lg font-bold">حسابي</h1>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => navigate("/notifications")}
-            className="p-2 rounded-xl bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer relative"
-          >
-            <Bell className="h-4 w-4" />
-          </button>
-          {isAdmin && (
+    <div className="flex h-screen bg-background overflow-hidden" dir="rtl">
+      {/* Desktop sidebar */}
+      <AccountSidebarDesktop />
+
+      {/* Mobile drawer */}
+      <AccountSidebarMobile open={drawerOpen} onClose={() => setDrawerOpen(false)} />
+
+      {/* Main */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        {/* Header */}
+        <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border px-4 py-3 flex items-center justify-between shrink-0">
+          <h1 className="text-lg font-bold">حسابي</h1>
+          <div className="flex items-center gap-2">
             <button
-              onClick={() => navigate("/admin")}
-              className="p-2 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 transition-colors cursor-pointer"
+              onClick={() => navigate("/notifications")}
+              className="p-2 rounded-xl bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer relative"
             >
-              <Shield className="h-4 w-4" />
+              <Bell className="h-4 w-4" />
             </button>
-          )}
-          <button
-            onClick={() => navigate("/settings")}
-            className="p-2 rounded-xl bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-          >
-            <Settings className="h-4 w-4" />
-          </button>
-        </div>
-      </div>
-
-      {/* Profile Info */}
-      <div className="px-4 py-6 space-y-4">
-        <div className="flex items-center gap-4">
-          <div className="w-20 h-20 rounded-2xl bg-muted flex items-center justify-center overflow-hidden">
-            {currentUser?.avatarUrl ? (
-              <img src={currentUser.avatarUrl} alt="avatar" className="w-full h-full object-cover" />
-            ) : (
-              <User className="h-10 w-10 text-muted-foreground" />
-            )}
-          </div>
-          <div className="flex-1">
-            <h2 className="text-xl font-bold">{currentUser?.name ?? "مستخدم"}</h2>
-            {currentUser?.email && (
-              <p className="text-sm text-muted-foreground">{currentUser.email}</p>
-            )}
-            {currentUser?.city && (
-              <p className="text-sm text-muted-foreground">{currentUser.city}</p>
-            )}
-            {currentUser?.isVerified && (
-              <span className="inline-flex items-center gap-1 text-xs bg-primary/10 text-primary rounded-full px-2 py-0.5 mt-1">
-                موثق
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-3">
-          <div className="bg-muted/50 rounded-xl p-3 text-center">
-            <p className="text-lg font-bold">{currentUser?.rating?.toFixed(1) ?? "0.0"}</p>
-            <p className="text-xs text-muted-foreground">التقييم</p>
-          </div>
-          <div className="bg-muted/50 rounded-xl p-3 text-center">
-            <p className="text-lg font-bold">{currentUser?.ratingCount ?? 0}</p>
-            <p className="text-xs text-muted-foreground">التقييمات</p>
-          </div>
-          <div className="bg-muted/50 rounded-xl p-3 text-center">
-            <p className="text-lg font-bold">
-              {currentUser?.subscriptionPackage ? "مشترك" : "مجاني"}
-            </p>
-            <p className="text-xs text-muted-foreground">الباقة</p>
-          </div>
-        </div>
-
-        {/* Quick actions */}
-        <div className="flex gap-2">
-          <Button
-            className="flex-1"
-            onClick={() => navigate("/create")}
-          >
-            إضافة إعلان
-          </Button>
-          <Button
-            variant="secondary"
-            className="flex-1"
-            onClick={() => navigate("/settings")}
-          >
-            تعديل الملف
-          </Button>
-        </div>
-
-        {/* Subscription CTA */}
-        {!currentUser?.subscriptionPackage && (
-          <button
-            onClick={() => navigate("/subscriptions")}
-            className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-primary/10 to-orange-400/10 border border-primary/20 hover:border-primary/40 transition-colors cursor-pointer"
-          >
-            <div className="flex items-center gap-2">
-              <Crown className="h-4 w-4 text-primary" />
-              <span className="text-sm font-medium">ترقّ إلى مميز</span>
-            </div>
-            <span className="text-xs text-primary font-medium">من 49 ر.س ←</span>
-          </button>
-        )}
-
-        {/* Recent notifications */}
-        {notifications && notifications.length > 0 && (
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-bold text-sm">آخر الإشعارات</h3>
+            {isAdmin && (
               <button
-                onClick={() => navigate("/notifications")}
-                className="text-xs text-primary cursor-pointer"
+                onClick={() => navigate("/admin")}
+                className="p-2 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 transition-colors cursor-pointer"
               >
-                عرض الكل
+                <Shield className="h-4 w-4" />
               </button>
+            )}
+            <button
+              onClick={() => setDrawerOpen(true)}
+              className="p-2 rounded-xl bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer md:hidden"
+            >
+              <Menu className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+
+        <div className="flex-1 overflow-y-auto">
+          {/* Profile Info */}
+          <div className="px-4 py-6 space-y-4">
+            <div className="flex items-center gap-4">
+              <div className="w-20 h-20 rounded-2xl bg-muted flex items-center justify-center overflow-hidden">
+                {currentUser?.avatarUrl ? (
+                  <img src={currentUser.avatarUrl} alt="avatar" className="w-full h-full object-cover" />
+                ) : (
+                  <User className="h-10 w-10 text-muted-foreground" />
+                )}
+              </div>
+              <div className="flex-1">
+                <h2 className="text-xl font-bold">{currentUser?.name ?? "مستخدم"}</h2>
+                {currentUser?.email && (
+                  <p className="text-sm text-muted-foreground">{currentUser.email}</p>
+                )}
+                {currentUser?.city && (
+                  <p className="text-sm text-muted-foreground">{currentUser.city}</p>
+                )}
+                {currentUser?.isVerified && (
+                  <span className="inline-flex items-center gap-1 text-xs bg-primary/10 text-primary rounded-full px-2 py-0.5 mt-1">
+                    موثق
+                  </span>
+                )}
+              </div>
             </div>
-            <div className="space-y-2">
-              {notifications.slice(0, 3).map((n) => (
-                <div
-                  key={n._id}
+
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-3">
+              <div className="bg-muted/50 rounded-xl p-3 text-center">
+                <p className="text-lg font-bold">{currentUser?.rating?.toFixed(1) ?? "0.0"}</p>
+                <p className="text-xs text-muted-foreground">التقييم</p>
+              </div>
+              <div className="bg-muted/50 rounded-xl p-3 text-center">
+                <p className="text-lg font-bold">{currentUser?.ratingCount ?? 0}</p>
+                <p className="text-xs text-muted-foreground">التقييمات</p>
+              </div>
+              <div className="bg-muted/50 rounded-xl p-3 text-center">
+                <p className="text-lg font-bold">
+                  {currentUser?.subscriptionPackage ? "مشترك" : "مجاني"}
+                </p>
+                <p className="text-xs text-muted-foreground">الباقة</p>
+              </div>
+            </div>
+
+            {/* Quick actions */}
+            <div className="flex gap-2">
+              <Button className="flex-1" onClick={() => navigate("/create")}>
+                إضافة إعلان
+              </Button>
+              <Button variant="secondary" className="flex-1" onClick={() => navigate("/settings")}>
+                تعديل الملف
+              </Button>
+            </div>
+
+            {/* Subscription CTA */}
+            {!currentUser?.subscriptionPackage && (
+              <button
+                onClick={() => navigate("/subscriptions")}
+                className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-primary/10 to-orange-400/10 border border-primary/20 hover:border-primary/40 transition-colors cursor-pointer"
+              >
+                <div className="flex items-center gap-2">
+                  <Crown className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-medium">ترقّ إلى مميز</span>
+                </div>
+                <span className="text-xs text-primary font-medium">من 49 ر.س ←</span>
+              </button>
+            )}
+
+            {/* Recent notifications */}
+            {notifications && notifications.length > 0 && (
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-bold text-sm">آخر الإشعارات</h3>
+                  <button
+                    onClick={() => navigate("/notifications")}
+                    className="text-xs text-primary cursor-pointer"
+                  >
+                    عرض الكل
+                  </button>
+                </div>
+                <div className="space-y-2">
+                  {notifications.slice(0, 3).map((n) => (
+                    <div
+                      key={n._id}
+                      className={cn(
+                        "p-3 rounded-xl border border-border",
+                        !n.isRead && "bg-primary/5 border-primary/20"
+                      )}
+                    >
+                      <p className="text-sm font-medium">{n.title}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">{n.body}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Tabs */}
+          <div className="px-4 border-b border-border">
+            <div className="flex gap-1 relative">
+              {TABS.map((tab) => (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
                   className={cn(
-                    "p-3 rounded-xl border border-border",
-                    !n.isRead && "bg-primary/5 border-primary/20"
+                    "flex items-center gap-1.5 px-4 py-3 text-sm font-medium transition-colors cursor-pointer",
+                    activeTab === tab.key ? "text-foreground" : "text-muted-foreground hover:text-foreground"
                   )}
                 >
-                  <p className="text-sm font-medium">{n.title}</p>
-                  <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">{n.body}</p>
-                </div>
+                  <tab.icon className="h-3.5 w-3.5" />
+                  {tab.label}
+                  {activeTab === tab.key && (
+                    <motion.div
+                      layoutId="tab-indicator-profile"
+                      className="absolute bottom-0 h-0.5 bg-primary rounded-full"
+                      style={{ width: "60px" }}
+                    />
+                  )}
+                </button>
               ))}
             </div>
           </div>
-        )}
-      </div>
 
-      {/* Tabs */}
-      <div className="px-4 border-b border-border">
-        <div className="flex gap-1 relative">
-          {TABS.map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              className={cn(
-                "flex items-center gap-1.5 px-4 py-3 text-sm font-medium transition-colors cursor-pointer",
-                activeTab === tab.key
-                  ? "text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
+          <div className="p-4">
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon"><Newspaper /></EmptyMedia>
+                <EmptyTitle>لا يوجد محتوى بعد</EmptyTitle>
+                <EmptyDescription>
+                  {activeTab === "listings" ? "لم تضف أي إعلانات بعد" : "لم تبدأ أي بث مباشر بعد"}
+                </EmptyDescription>
+              </EmptyHeader>
+              {activeTab === "listings" && (
+                <EmptyContent>
+                  <Button size="sm" onClick={() => navigate("/create")}>إضافة إعلان</Button>
+                </EmptyContent>
               )}
-            >
-              <tab.icon className="h-3.5 w-3.5" />
-              {tab.label}
-              {activeTab === tab.key && (
-                <motion.div
-                  layoutId="tab-indicator-profile"
-                  className="absolute bottom-0 h-0.5 bg-primary rounded-full"
-                  style={{ width: "60px", right: activeTab === "listings" ? "auto" : "auto" }}
-                />
-              )}
-            </button>
-          ))}
+            </Empty>
+          </div>
         </div>
-      </div>
-
-      <div className="p-4">
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <Newspaper />
-            </EmptyMedia>
-            <EmptyTitle>لا يوجد محتوى بعد</EmptyTitle>
-            <EmptyDescription>
-              {activeTab === "listings" ? "لم تضف أي إعلانات بعد" : "لم تبدأ أي بث مباشر بعد"}
-            </EmptyDescription>
-          </EmptyHeader>
-          {activeTab === "listings" && (
-            <EmptyContent>
-              <Button size="sm" onClick={() => navigate("/create")}>
-                إضافة إعلان
-              </Button>
-            </EmptyContent>
-          )}
-        </Empty>
       </div>
     </div>
   );
@@ -342,7 +345,6 @@ function PublicSellerProfile({ id }: { id: string }) {
 export default function SellerProfilePage() {
   const { id } = useParams<{ id: string }>();
 
-  // If no id param, show current user's profile
   if (!id) {
     return (
       <>
