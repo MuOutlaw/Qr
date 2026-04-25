@@ -3,7 +3,6 @@ import { motion } from "motion/react";
 import { Gavel } from "lucide-react";
 import AuctionCard from "./_components/auction-card.tsx";
 import AuctionFilters from "./_components/auction-filters.tsx";
-import { useAuctions } from "@/hooks/use-mock-data.ts";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import {
   Empty,
@@ -12,6 +11,8 @@ import {
   EmptyTitle,
   EmptyDescription,
 } from "@/components/ui/empty.tsx";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api.js";
 
 type CategoryFilter = "all" | "camels" | "sheep" | "goats" | "horses" | "cattle";
 
@@ -19,10 +20,15 @@ export default function AuctionsPage() {
   const [category, setCategory] = useState<CategoryFilter>("all");
   const [location, setLocation] = useState("");
 
-  const auctions = useAuctions({
-    category,
-    location: location || undefined,
-  });
+  const allAuctions = useQuery(api.auctions.queries.listAll);
+
+  const auctions = allAuctions === undefined
+    ? undefined
+    : allAuctions.filter((a) => {
+        if (category !== "all" && a.category !== category) return false;
+        if (location && a.city !== location) return false;
+        return true;
+      });
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
@@ -39,11 +45,9 @@ export default function AuctionsPage() {
               <Gavel className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-foreground leading-tight">
-                المزادات
-              </h1>
+              <h1 className="text-lg font-bold text-foreground leading-tight">المزادات</h1>
               <p className="text-[10px] text-muted-foreground leading-none">
-                {auctions?.length ?? 0} مزاد نشط
+                {auctions === undefined ? "..." : `${auctions.length} مزاد`}
               </p>
             </div>
           </div>
@@ -62,7 +66,7 @@ export default function AuctionsPage() {
 
       {/* Grid */}
       <div className="px-4 py-4">
-        {!auctions ? (
+        {auctions === undefined ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {Array.from({ length: 6 }).map((_, i) => (
               <Skeleton key={i} className="aspect-[3/4] rounded-xl" />
@@ -71,12 +75,10 @@ export default function AuctionsPage() {
         ) : auctions.length === 0 ? (
           <Empty>
             <EmptyHeader>
-              <EmptyMedia variant="icon">
-                <Gavel />
-              </EmptyMedia>
+              <EmptyMedia variant="icon"><Gavel /></EmptyMedia>
               <EmptyTitle>لا توجد مزادات</EmptyTitle>
               <EmptyDescription>
-                لا توجد مزادات تطابق معايير البحث. جرب تعديل الفلاتر.
+                لا توجد مزادات نشطة حالياً. تحقق لاحقاً.
               </EmptyDescription>
             </EmptyHeader>
           </Empty>

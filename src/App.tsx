@@ -9,6 +9,9 @@ import ClassifiedsPage from "./pages/classifieds/page.tsx";
 import SellerProfilePage from "./pages/seller/page.tsx";
 import CreateListingPage from "./pages/create/page.tsx";
 import SearchPage from "./pages/search/page.tsx";
+import FavoritesPage from "./pages/favorites/page.tsx";
+import MessagesPage from "./pages/messages/page.tsx";
+import NotificationsPage from "./pages/notifications/page.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 export default function App() {
@@ -25,6 +28,9 @@ export default function App() {
             <Route path="/seller/:id" element={<SellerProfilePage />} />
             <Route path="/create" element={<CreateListingPage />} />
             <Route path="/search" element={<SearchPage />} />
+            <Route path="/favorites" element={<FavoritesPage />} />
+            <Route path="/messages" element={<MessagesPage />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           </Route>
           {/* Full-screen pages outside layout */}

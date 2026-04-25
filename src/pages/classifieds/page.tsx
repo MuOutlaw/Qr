@@ -3,7 +3,6 @@ import { motion } from "motion/react";
 import { Newspaper, LayoutGrid, List } from "lucide-react";
 import ListingCard from "./_components/listing-card.tsx";
 import ClassifiedFilters from "./_components/classified-filters.tsx";
-import { useListings } from "@/hooks/use-mock-data.ts";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -12,8 +11,13 @@ import {
   EmptyMedia,
   EmptyTitle,
   EmptyDescription,
+  EmptyContent,
 } from "@/components/ui/empty.tsx";
 import { cn } from "@/lib/utils.ts";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api.js";
+import { usePaginatedQuery } from "convex/react";
+import { useNavigate } from "react-router-dom";
 
 type CategoryFilter = "all" | "camels" | "sheep" | "goats" | "horses" | "cattle";
 type ViewMode = "grid" | "list";
@@ -21,14 +25,18 @@ type ViewMode = "grid" | "list";
 export default function ClassifiedsPage() {
   const [category, setCategory] = useState<CategoryFilter>("all");
   const [location, setLocation] = useState("");
-  const [listingType, setListingType] = useState("");
   const [view, setView] = useState<ViewMode>("grid");
+  const navigate = useNavigate();
 
-  const listings = useListings({
-    category,
-    location: location || undefined,
-    type: (listingType || undefined) as "fixed" | "auction" | undefined,
-  });
+  const { results: listings, status, loadMore } = usePaginatedQuery(
+    api.listings.queries.list,
+    {
+      category: category !== "all" ? category : undefined,
+      city: location || undefined,
+      sortBy: "newest",
+    },
+    { initialNumItems: 12 }
+  );
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
@@ -45,11 +53,9 @@ export default function ClassifiedsPage() {
               <Newspaper className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-foreground leading-tight">
-                الإعلانات
-              </h1>
+              <h1 className="text-lg font-bold text-foreground leading-tight">الإعلانات</h1>
               <p className="text-[10px] text-muted-foreground leading-none">
-                {listings?.length ?? 0} إعلان
+                {status === "LoadingFirstPage" ? "..." : `${listings.length} إعلان`}
               </p>
             </div>
           </div>
@@ -59,10 +65,7 @@ export default function ClassifiedsPage() {
             <Button
               variant="ghost"
               size="icon"
-              className={cn(
-                "h-8 w-8 rounded-md cursor-pointer",
-                view === "grid" && "bg-background shadow-sm"
-              )}
+              className={cn("h-8 w-8 rounded-md cursor-pointer", view === "grid" && "bg-background shadow-sm")}
               onClick={() => setView("grid")}
             >
               <LayoutGrid className="h-4 w-4" />
@@ -70,10 +73,7 @@ export default function ClassifiedsPage() {
             <Button
               variant="ghost"
               size="icon"
-              className={cn(
-                "h-8 w-8 rounded-md cursor-pointer",
-                view === "list" && "bg-background shadow-sm"
-              )}
+              className={cn("h-8 w-8 rounded-md cursor-pointer", view === "list" && "bg-background shadow-sm")}
               onClick={() => setView("list")}
             >
               <List className="h-4 w-4" />
@@ -89,55 +89,49 @@ export default function ClassifiedsPage() {
           onCategoryChange={(v) => setCategory(v as CategoryFilter)}
           location={location}
           onLocationChange={setLocation}
-          listingType={listingType}
-          onListingTypeChange={setListingType}
+          listingType=""
+          onListingTypeChange={() => {}}
         />
       </div>
 
       {/* Content */}
       <div className="px-4 py-4">
-        {!listings ? (
+        {status === "LoadingFirstPage" ? (
           <div className={cn(
-            view === "grid"
-              ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-              : "space-y-3"
+            view === "grid" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" : "space-y-3"
           )}>
             {Array.from({ length: 6 }).map((_, i) => (
-              <Skeleton
-                key={i}
-                className={view === "grid" ? "aspect-[3/4] rounded-xl" : "h-28 rounded-xl"}
-              />
+              <Skeleton key={i} className={view === "grid" ? "aspect-[3/4] rounded-xl" : "h-28 rounded-xl"} />
             ))}
           </div>
         ) : listings.length === 0 ? (
           <Empty>
             <EmptyHeader>
-              <EmptyMedia variant="icon">
-                <Newspaper />
-              </EmptyMedia>
+              <EmptyMedia variant="icon"><Newspaper /></EmptyMedia>
               <EmptyTitle>لا توجد إعلانات</EmptyTitle>
-              <EmptyDescription>
-                لا توجد إعلانات تطابق معايير البحث. جرب تعديل الفلاتر.
-              </EmptyDescription>
+              <EmptyDescription>لم يتم نشر أي إعلان بعد. كن أول من يضيف إعلاناً!</EmptyDescription>
             </EmptyHeader>
+            <EmptyContent>
+              <Button size="sm" onClick={() => navigate("/create")}>أضف إعلان</Button>
+            </EmptyContent>
           </Empty>
         ) : (
-          <div
-            className={cn(
-              view === "grid"
-                ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-                : "space-y-3"
+          <>
+            <div className={cn(
+              view === "grid" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" : "space-y-3"
+            )}>
+              {listings.map((listing, i) => (
+                <ListingCard key={listing._id} listing={listing} index={i} view={view} />
+              ))}
+            </div>
+            {status === "CanLoadMore" && (
+              <div className="mt-6 flex justify-center">
+                <Button variant="secondary" onClick={() => loadMore(12)} className="cursor-pointer">
+                  تحميل المزيد
+                </Button>
+              </div>
             )}
-          >
-            {listings.map((listing, i) => (
-              <ListingCard
-                key={listing._id}
-                listing={listing}
-                index={i}
-                view={view}
-              />
-            ))}
-          </div>
+          </>
         )}
       </div>
     </div>
