@@ -16,8 +16,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils.ts";
-import { useAuth } from "@/hooks/use-auth.ts";
-import { Authenticated } from "convex/react";
+import { useAuth } from "@/contexts/auth-context";
 
 const SIDEBAR_ITEMS = [
   { path: "/", icon: Home, label: "الرئيسية" },
@@ -34,8 +33,7 @@ const SIDEBAR_ITEMS = [
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { removeUser } = useAuth();
-  const currentUser = useQuery(api.users.getCurrentUser);
+  const { user: currentUser, logout } = useAuth();
   const isAdmin = useQuery(api.admin.queries.isAdmin);
 
   const go = (path: string) => {
@@ -117,7 +115,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
       {/* Sign out */}
       <div className="p-2 border-t border-border">
         <button
-          onClick={() => removeUser()}
+          onClick={() => logout()}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors cursor-pointer"
         >
           <LogOut className="h-4 w-4 shrink-0" />

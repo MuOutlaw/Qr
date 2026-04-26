@@ -1,1 +1,1 @@
-export { useUser, useAuth } from "@usehercules/auth/react";
+export { useAuth, useUser, useIsAuthenticated } from "@/contexts/auth-context";

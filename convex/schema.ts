@@ -283,6 +283,18 @@ export default defineSchema({
     .index("by_listing", ["listingId"])
     .index("by_user_and_listing", ["userId", "listingId"]),
 
+  // ─── Auth Sessions (OTP-based auth) ───────────────────────────
+  authSessions: defineTable({
+    phone: v.string(),
+    sessionToken: v.string(),
+    userId: v.id("users"),
+    expiresAt: v.string(),
+    createdAt: v.string(),
+  })
+    .index("by_phone", ["phone"])
+    .index("by_token", ["sessionToken"])
+    .index("by_user", ["userId"]),
+
   // ─── Audit Logs ───────────────────────────────────────────────
   auditLogs: defineTable({
     userId: v.id("users"),

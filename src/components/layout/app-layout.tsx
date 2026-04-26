@@ -3,8 +3,8 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { User, Plus, X, Video, FileText, Search } from "lucide-react";
 import { cn } from "@/lib/utils.ts";
 import { motion, AnimatePresence } from "motion/react";
-import { Authenticated } from "convex/react";
 import { useQuery } from "convex/react";
+import { Authenticated } from "@/components/auth/auth-guards";
 import { api } from "@/convex/_generated/api.js";
 import { AccountSidebarDesktop, AccountSidebarMobile } from "@/components/layout/account-sidebar.tsx";
 

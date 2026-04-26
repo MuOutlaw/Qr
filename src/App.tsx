@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { DefaultProviders } from "./components/providers/default.tsx";
-import AuthCallback from "./pages/auth/Callback.tsx";
+import LoginPage from "./pages/auth/Login.tsx";
+import VerifyOTPPage from "./pages/auth/VerifyOTP.tsx";
 import AppLayout from "./components/layout/app-layout.tsx";
 import Index from "./pages/Index.tsx";
 import LiveStreamPage from "./pages/live/page.tsx";
@@ -29,7 +30,8 @@ export default function App() {
     <DefaultProviders>
       <BrowserRouter>
         <Routes>
-          <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route path="/auth/login" element={<LoginPage />} />
+          <Route path="/auth/verify" element={<VerifyOTPPage />} />
           <Route element={<AppLayout />}>
             <Route path="/" element={<Index />} />
             <Route path="/auctions" element={<AuctionsPage />} />

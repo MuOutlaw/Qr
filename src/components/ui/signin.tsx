@@ -1,8 +1,8 @@
-import { forwardRef, useCallback, useEffect } from "react";
+import { forwardRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { type VariantProps } from "class-variance-authority";
 import { Loader2, LogIn, LogOut } from "lucide-react";
-import { toast } from "sonner";
-import { useAuth } from "@usehercules/auth/react";
+import { useAuth } from "@/contexts/auth-context";
 import { Button, buttonVariants } from "@/components/ui/button.tsx";
 
 export interface SignInButtonProps
@@ -20,17 +20,16 @@ export interface SignInButtonProps
   showIcon?: boolean;
   /**
    * Custom text for sign in state
-   * @default "Sign In"
+   * @default "تسجيل الدخول"
    */
   signInText?: string;
   /**
    * Custom text for sign out state
-   * @default "Sign Out"
+   * @default "تسجيل الخروج"
    */
   signOutText?: string;
   /**
    * Custom text for loading state
-   * @default "Signing In..." or "Signing Out..."
    */
   loadingText?: string;
   /**
@@ -50,8 +49,8 @@ export const SignInButton = forwardRef<HTMLButtonElement, SignInButtonProps>(
       onClick,
       disabled,
       showIcon = true,
-      signInText = "Sign In",
-      signOutText = "Sign Out",
+      signInText = "تسجيل الدخول",
+      signOutText = "تسجيل الخروج",
       loadingText,
       className,
       variant,
@@ -61,16 +60,8 @@ export const SignInButton = forwardRef<HTMLButtonElement, SignInButtonProps>(
     },
     ref,
   ) => {
-    const { isAuthenticated, signin, signout, isLoading, error } = useAuth();
-
-    useEffect(() => {
-      if (error) {
-        toast.error("Login error", {
-          description: error.message,
-        });
-        console.error("Login error", error);
-      }
-    }, [error]);
+    const navigate = useNavigate();
+    const { isAuthenticated, isLoading, logout } = useAuth();
 
     const handleClick = useCallback(
       async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -79,22 +70,21 @@ export const SignInButton = forwardRef<HTMLButtonElement, SignInButtonProps>(
 
         try {
           if (isAuthenticated) {
-            await signout();
+            await logout();
           } else {
-            await signin();
+            navigate("/auth/login");
           }
         } catch (err) {
           console.error("Authentication error:", err);
-          // Don't prevent the default here as the auth library handles errors
         }
       },
-      [isAuthenticated, signout, signin, onClick],
+      [isAuthenticated, logout, navigate, onClick],
     );
 
     const isDisabled = disabled || isLoading;
     const defaultLoadingText = isAuthenticated
-      ? "Signing Out..."
-      : "Signing In...";
+      ? "جاري الخروج..."
+      : "جاري التحميل...";
     const currentLoadingText = loadingText || defaultLoadingText;
 
     const buttonText = isLoading
@@ -122,10 +112,9 @@ export const SignInButton = forwardRef<HTMLButtonElement, SignInButtonProps>(
         asChild={asChild}
         aria-label={
           isAuthenticated
-            ? "Sign out of your account"
-            : "Sign in to your account"
+            ? "تسجيل الخروج من حسابك"
+            : "تسجيل الدخول إلى حسابك"
         }
-        aria-describedby={error ? "auth-error" : undefined}
         {...props}
       >
         {showIcon && icon}
